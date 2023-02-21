@@ -65,21 +65,8 @@ public class COSC322Test extends GamePlayer {
 	public COSC322Test(String userName, String passwd) {
 		this.userName = userName;
 		this.passwd = passwd;
-		this.board = new int[10][10];
-		
-		//hard coded but ideally set in handler.
-		this.board[0][6] = this.whiteQueen;
-		this.board[0][3] = this.whiteQueen;
-		
-		this.board[4][0] = this.whiteQueen;
-		this.board[4][9] = this.whiteQueen;
-		
-		this.board[9][3] = this.blackQueen;
-		this.board[9][6] = this.blackQueen;
-		
-		this.board[6][0] = this.blackQueen;
-		this.board[6][9] = this.blackQueen;
-
+		//this.board = new int[10][10];
+	
 		// comment
 		// To make a GUI-based player, create an instance of BaseGameGUI
 		// and implement the method getGameGUI() accordingly
@@ -108,12 +95,32 @@ public class COSC322Test extends GamePlayer {
 		case GameMessage.GAME_STATE_BOARD:
 			ArrayList<Integer> stateArr = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.GAME_STATE));
 			this.getGameGUI().setGameState(stateArr);
+			
+			this.board = new int[10][10];
+			
+			//hard coded but ideally set using stateArr
+			this.board[0][3] = this.whiteQueen;
+			this.board[0][6] = this.whiteQueen;
+			
+			this.board[3][0] = this.whiteQueen;
+			this.board[3][9] = this.whiteQueen;
+			
+			this.board[6][0] = this.blackQueen;
+			this.board[6][9] = this.blackQueen;
+			
+			this.board[9][3] = this.blackQueen;
+			this.board[9][6] = this.blackQueen;
+			
 			break; /* THIS GAME STATE BOARD IS A MESSAGE CONTAINING THE CURRENT STATE */
 		case GameMessage.GAME_ACTION_MOVE:
 			/// CHECK IF MOVE IS LEGAL HERE!!!!!!!!!!						
 			ArrayList<Integer> queenPosCurr = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
 			ArrayList<Integer> queenPosNext = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.QUEEN_POS_NEXT));
 			ArrayList<Integer> arrowPos = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.ARROW_POS));
+			
+			System.out.println("queenPosCurr " + queenPosCurr);
+			System.out.println("queenPosNext " + queenPosNext);
+			System.out.println("arrowPos " + arrowPos);
 			
 			int queenPosCurrRow = queenPosCurr.get(0);
 			int queenPosCurrColumn = queenPosCurr.get(1);
@@ -132,24 +139,35 @@ public class COSC322Test extends GamePlayer {
 			// if it is legal, update our local board and the gui, then let the AI run
 			// if it is ilegal, report the illegal move!
 			
+			//check that the queen move is legal
 			boolean legal = CheckMoveHelper(queenPosCurrRow, queenPosCurrColumn, queenPosNextRow, queenPosNextColumn);
 			
-			this.board[queenPosCurr.get(0)-1][queenPosCurr.get(1)-1] = 0;
-			this.board[queenPosNext.get(0)-1][queenPosNext.get(1)-1] = this.opponentQueen;
+			System.out.println("Queen Move legal " + legal);
 			
-			legal = legal&&CheckMoveHelper(queenPosNextRow, queenPosNextColumn, arrowPosRow, arrowPosColumn);
+			//move the queen
+			this.board[queenPosCurrRow - 1][queenPosCurrColumn - 1] = 0;
+			this.board[queenPosNextRow - 1][queenPosNextColumn -1] = this.opponentQueen;
+			
+			//check the arrow placement is legal
+			boolean arrowLegal = CheckMoveHelper(queenPosNextRow, queenPosNextColumn, arrowPosRow, arrowPosColumn);
 
-			System.out.println("Legal " + legal);
+			System.out.println("Arrow move legal " + arrowLegal);
+			
+			legal = legal&&arrowLegal;
 			
 			if(legal) {
-				this.board[arrowPos.get(0)-1][arrowPos.get(1)-1] = this.arrow;
+				this.board[arrowPosRow -1][arrowPosColumn-1] = this.arrow;
 				this.getGameGUI().updateGameState(msgDetails);
 			}else {
-				this.board[queenPosCurr.get(0)-1][queenPosCurr.get(1)-1] = queenPosCurrValue;
-				this.board[queenPosNext.get(0)-1][queenPosNext.get(1)-1] = queenPosNextValue;
+				
+				System.out.println("Illegal move!");
+				
+				//revert the queen position if the move is not legal.
+				this.board[queenPosCurrRow-1][queenPosCurrColumn-1] = queenPosCurrValue;
+				this.board[queenPosNextRow-1][queenPosNextColumn-1] = queenPosNextValue;
 				assert(false);
 			}
-
+			
 			break;
 		case GameMessage.GAME_ACTION_START:
 			String playingWhiteQueens = (String) msgDetails.get(AmazonsGameMessage.PLAYER_WHITE);
@@ -161,18 +179,7 @@ public class COSC322Test extends GamePlayer {
 		}
 		return true;
 	}
-	
-	public boolean MoveIsLegal2(ArrayList<Integer> posCurr, ArrayList<Integer> posNext) {
-		
-		int posCurrRow = posCurr.get(0);
-		int posCurrColumn = posCurr.get(1);
-		
-		int posNextRow = posNext.get(0);
-		int posNextColumn = posNext.get(1);
-		
-		return CheckMoveHelper(posCurrRow, posCurrColumn, posNextRow, posNextColumn);
-	}
-		
+			
 	public boolean CheckMoveHelper(int startRow, int startColumn, int targetRow, int targetColumn) {
 		
 		//must move
@@ -184,12 +191,15 @@ public class COSC322Test extends GamePlayer {
 		
 		if(startRow == targetRow) {
 			//move horizontally
+			System.out.println("Horizontal direction: " + columnDirection);
 			return CheckMove(startRow, startColumn, targetRow, targetColumn, 0, columnDirection);
 		}else if(startColumn == targetColumn) {
 			//move vertical
+			System.out.println("Vertical direction: " + rowDirection);
 			return CheckMove(startRow, startColumn, targetRow, targetColumn, rowDirection, 0);
 		}else {
 			//check diagonal
+			System.out.println("Diagonal row direction: " + rowDirection + " column direction: " + columnDirection);
 			return CheckMove(startRow, startColumn, targetRow, targetColumn, rowDirection, columnDirection);
 		}
 	}
@@ -206,6 +216,7 @@ public class COSC322Test extends GamePlayer {
 			int val = this.board[posRow-1][posColumn-1];
 			
 			if(val != 0) {
+				System.out.println("Move blocked.");
 				return false;
 			}
 			else if(posRow == targetRow && posColumn == targetColumn) {
@@ -213,8 +224,10 @@ public class COSC322Test extends GamePlayer {
 			}
 				
 			posRow += rowDirection;	
-			posRow += columnDirection;
+			posColumn += columnDirection;
 		}
+		
+		System.out.println("Target placement is not on a valid path from the current position");
 		
 		return false;
 	}
