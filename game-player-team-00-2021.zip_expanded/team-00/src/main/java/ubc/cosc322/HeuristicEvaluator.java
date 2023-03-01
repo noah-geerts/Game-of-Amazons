@@ -22,7 +22,7 @@ public class HeuristicEvaluator {
 //    		{0,0,0,0,0,0,0,0,0,0},
 //    		{0,0,0,1,0,0,1,0,0,0}};
 //    		
-//    	int[][] mobilityMap = getMobilityMap(board);
+//    	int[][] mobilityMap = AmazonsUtility.getMobilityMap(board);
 //    	System.out.println(getHeuristicEval(board, mobilityMap, whiteQueen));
 //    		
 //		//final long startTime = System.nanoTime();
@@ -128,7 +128,7 @@ public class HeuristicEvaluator {
 			boolean downLeftValid = true;
 			for(int i = 1; i < 10; i++) {
 				// up
-				if(upValid && isSpotValid(board, posY-i, posX)) {
+				if(upValid && AmazonsUtility.isSpotValid(board, posY-i, posX)) {
 					if(whiteMinDistance[posY-i][posX] > minDistance) {
 						whiteMinDistance[posY-i][posX] = minDistance;
 						whiteQueue.add(new int[]{posY-i, posX});
@@ -136,7 +136,7 @@ public class HeuristicEvaluator {
 				} else upValid = false;
 				
 				// up left
-				if(upLeftValid && isSpotValid(board, posY-i, posX-i)) {
+				if(upLeftValid && AmazonsUtility.isSpotValid(board, posY-i, posX-i)) {
 					if(whiteMinDistance[posY-i][posX-i] > minDistance) {
 						whiteMinDistance[posY-i][posX-i] = minDistance;
 						whiteQueue.add(new int[]{posY-i, posX-i});
@@ -144,7 +144,7 @@ public class HeuristicEvaluator {
 				} else upLeftValid = false;
 				
 				// left
-				if(leftValid && isSpotValid(board, posY, posX-i)) {
+				if(leftValid && AmazonsUtility.isSpotValid(board, posY, posX-i)) {
 					if(whiteMinDistance[posY][posX-i] > minDistance) {
 						whiteMinDistance[posY][posX-i] = minDistance;
 						whiteQueue.add(new int[]{posY, posX-i});
@@ -152,7 +152,7 @@ public class HeuristicEvaluator {
 				} else leftValid = false;
 				
 				// down left
-				if(downLeftValid && isSpotValid(board, posY+i, posX-i)) {
+				if(downLeftValid && AmazonsUtility.isSpotValid(board, posY+i, posX-i)) {
 					if(whiteMinDistance[posY+i][posX-i] > minDistance) {
 						whiteMinDistance[posY+i][posX-i] = minDistance;
 						whiteQueue.add(new int[]{posY+i, posX-i});
@@ -160,7 +160,7 @@ public class HeuristicEvaluator {
 				} else downLeftValid = false;
 				
 				// down
-				if(downValid && isSpotValid(board, posY+i, posX)) {
+				if(downValid && AmazonsUtility.isSpotValid(board, posY+i, posX)) {
 					if(whiteMinDistance[posY+i][posX] > minDistance) {
 						whiteMinDistance[posY+i][posX] = minDistance;
 						whiteQueue.add(new int[]{posY+i, posX});
@@ -168,7 +168,7 @@ public class HeuristicEvaluator {
 				} else downValid = false;
 				
 				// down right
-				if(downRightValid && isSpotValid(board, posY+i, posX+i)) {
+				if(downRightValid && AmazonsUtility.isSpotValid(board, posY+i, posX+i)) {
 					if(whiteMinDistance[posY+i][posX+i] > minDistance) {
 						whiteMinDistance[posY+i][posX+i] = minDistance;
 						whiteQueue.add(new int[]{posY+i, posX+i});
@@ -176,7 +176,7 @@ public class HeuristicEvaluator {
 				} else downRightValid = false;
 				
 				// right
-				if(rightValid && isSpotValid(board, posY, posX+i)) {
+				if(rightValid && AmazonsUtility.isSpotValid(board, posY, posX+i)) {
 					if(whiteMinDistance[posY][posX+i] > minDistance) {
 						whiteMinDistance[posY][posX+i] = minDistance;
 						whiteQueue.add(new int[]{posY, posX+i});
@@ -184,7 +184,7 @@ public class HeuristicEvaluator {
 				} else rightValid = false;
 				
 				// up right
-				if(upRightValid && isSpotValid(board, posY-i, posX+i)) {
+				if(upRightValid && AmazonsUtility.isSpotValid(board, posY-i, posX+i)) {
 					if(whiteMinDistance[posY-i][posX+i] > minDistance) {
 						whiteMinDistance[posY-i][posX+i] = minDistance;
 						whiteQueue.add(new int[]{posY-i, posX+i});
@@ -209,7 +209,7 @@ public class HeuristicEvaluator {
 			boolean downLeftValid = true;
 			for(int i = 1; i < 10; i++) {
 				// up
-				if(upValid && isSpotValid(board, posY-i, posX)) {
+				if(upValid && AmazonsUtility.isSpotValid(board, posY-i, posX)) {
 					if(blackMinDistance[posY-i][posX] > minDistance) {
 						blackMinDistance[posY-i][posX] = minDistance;
 						blackQueue.add(new int[]{posY-i, posX});
@@ -217,7 +217,7 @@ public class HeuristicEvaluator {
 				} else upValid = false;
 				
 				// up left
-				if(upLeftValid && isSpotValid(board, posY-i, posX-i)) {
+				if(upLeftValid && AmazonsUtility.isSpotValid(board, posY-i, posX-i)) {
 					if(blackMinDistance[posY-i][posX-i] > minDistance) {
 						blackMinDistance[posY-i][posX-i] = minDistance;
 						blackQueue.add(new int[]{posY-i, posX-i});
@@ -225,7 +225,7 @@ public class HeuristicEvaluator {
 				} else upLeftValid = false;
 				
 				// left
-				if(leftValid && isSpotValid(board, posY, posX-i)) {
+				if(leftValid && AmazonsUtility.isSpotValid(board, posY, posX-i)) {
 					if(blackMinDistance[posY][posX-i] > minDistance) {
 						blackMinDistance[posY][posX-i] = minDistance;
 						blackQueue.add(new int[]{posY, posX-i});
@@ -233,7 +233,7 @@ public class HeuristicEvaluator {
 				} else leftValid = false;
 				
 				// down left
-				if(downLeftValid && isSpotValid(board, posY+i, posX-i)) {
+				if(downLeftValid && AmazonsUtility.isSpotValid(board, posY+i, posX-i)) {
 					if(blackMinDistance[posY+i][posX-i] > minDistance) {
 						blackMinDistance[posY+i][posX-i] = minDistance;
 						blackQueue.add(new int[]{posY+i, posX-i});
@@ -241,7 +241,7 @@ public class HeuristicEvaluator {
 				} else downLeftValid = false;
 				
 				// down
-				if(downValid && isSpotValid(board, posY+i, posX)) {
+				if(downValid && AmazonsUtility.isSpotValid(board, posY+i, posX)) {
 					if(blackMinDistance[posY+i][posX] > minDistance) {
 						blackMinDistance[posY+i][posX] = minDistance;
 						blackQueue.add(new int[]{posY+i, posX});
@@ -249,7 +249,7 @@ public class HeuristicEvaluator {
 				} else downValid = false;
 				
 				// down right
-				if(downRightValid && isSpotValid(board, posY+i, posX+i)) {
+				if(downRightValid && AmazonsUtility.isSpotValid(board, posY+i, posX+i)) {
 					if(blackMinDistance[posY+i][posX+i] > minDistance) {
 						blackMinDistance[posY+i][posX+i] = minDistance;
 						blackQueue.add(new int[]{posY+i, posX+i});
@@ -257,7 +257,7 @@ public class HeuristicEvaluator {
 				} else downRightValid = false;
 				
 				// right
-				if(rightValid && isSpotValid(board, posY, posX+i)) {
+				if(rightValid && AmazonsUtility.isSpotValid(board, posY, posX+i)) {
 					if(blackMinDistance[posY][posX+i] > minDistance) {
 						blackMinDistance[posY][posX+i] = minDistance;
 						blackQueue.add(new int[]{posY, posX+i});
@@ -265,7 +265,7 @@ public class HeuristicEvaluator {
 				} else rightValid = false;
 				
 				// up right
-				if(upRightValid && isSpotValid(board, posY-i, posX+i)) {
+				if(upRightValid && AmazonsUtility.isSpotValid(board, posY-i, posX+i)) {
 					if(blackMinDistance[posY-i][posX+i] > minDistance) {
 						blackMinDistance[posY-i][posX+i] = minDistance;
 						blackQueue.add(new int[]{posY-i, posX+i});
@@ -315,7 +315,7 @@ public class HeuristicEvaluator {
 				}
 			}
 		}
-		//printBoard(boardControl);
+		//AmazonsUtility.printBoard(boardControl);
 		return new double[]{score, 2.0*c1, w};
 	}
 	
@@ -358,7 +358,7 @@ public class HeuristicEvaluator {
 			int minDistance = whiteMinDistance[posY][posX] + 1;
 			
 			// up
-			if(isSpotValid(board, posY-1, posX)) {
+			if(AmazonsUtility.isSpotValid(board, posY-1, posX)) {
 				if(whiteMinDistance[posY-1][posX] > minDistance) {
 					whiteMinDistance[posY-1][posX] = minDistance;
 					whiteQueue.add(new int[]{posY-1, posX});
@@ -366,7 +366,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// up left
-			if(isSpotValid(board, posY-1, posX-1)) {
+			if(AmazonsUtility.isSpotValid(board, posY-1, posX-1)) {
 				if(whiteMinDistance[posY-1][posX-1] > minDistance) {
 					whiteMinDistance[posY-1][posX-1] = minDistance;
 					whiteQueue.add(new int[]{posY-1, posX-1});
@@ -374,7 +374,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// left
-			if(isSpotValid(board, posY, posX-1)) {
+			if(AmazonsUtility.isSpotValid(board, posY, posX-1)) {
 				if(whiteMinDistance[posY][posX-1] > minDistance) {
 					whiteMinDistance[posY][posX-1] = minDistance;
 					whiteQueue.add(new int[]{posY, posX-1});
@@ -382,7 +382,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// down left
-			if(isSpotValid(board, posY+1, posX-1)) {
+			if(AmazonsUtility.isSpotValid(board, posY+1, posX-1)) {
 				if(whiteMinDistance[posY+1][posX-1] > minDistance) {
 					whiteMinDistance[posY+1][posX-1] = minDistance;
 					whiteQueue.add(new int[]{posY+1, posX-1});
@@ -390,7 +390,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// down
-			if(isSpotValid(board, posY+1, posX)) {
+			if(AmazonsUtility.isSpotValid(board, posY+1, posX)) {
 				if(whiteMinDistance[posY+1][posX] > minDistance) {
 					whiteMinDistance[posY+1][posX] = minDistance;
 					whiteQueue.add(new int[]{posY+1, posX});
@@ -398,7 +398,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// down right
-			if(isSpotValid(board, posY+1, posX+1)) {
+			if(AmazonsUtility.isSpotValid(board, posY+1, posX+1)) {
 				if(whiteMinDistance[posY+1][posX+1] > minDistance) {
 					whiteMinDistance[posY+1][posX+1] = minDistance;
 					whiteQueue.add(new int[]{posY+1, posX+1});
@@ -406,7 +406,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// right
-			if(isSpotValid(board, posY, posX+1)) {
+			if(AmazonsUtility.isSpotValid(board, posY, posX+1)) {
 				if(whiteMinDistance[posY][posX+1] > minDistance) {
 					whiteMinDistance[posY][posX+1] = minDistance;
 					whiteQueue.add(new int[]{posY, posX+1});
@@ -414,7 +414,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// up right
-			if(isSpotValid(board, posY-1, posX+1)) {
+			if(AmazonsUtility.isSpotValid(board, posY-1, posX+1)) {
 				if(whiteMinDistance[posY-1][posX+1] > minDistance) {
 					whiteMinDistance[posY-1][posX+1] = minDistance;
 					whiteQueue.add(new int[]{posY-1, posX+1});
@@ -429,7 +429,7 @@ public class HeuristicEvaluator {
 			int minDistance = blackMinDistance[posY][posX] + 1;
 			
 			// up
-			if(isSpotValid(board, posY-1, posX)) {
+			if(AmazonsUtility.isSpotValid(board, posY-1, posX)) {
 				if(blackMinDistance[posY-1][posX] > minDistance) {
 					blackMinDistance[posY-1][posX] = minDistance;
 					blackQueue.add(new int[]{posY-1, posX});
@@ -437,7 +437,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// up left
-			if(isSpotValid(board, posY-1, posX-1)) {
+			if(AmazonsUtility.isSpotValid(board, posY-1, posX-1)) {
 				if(blackMinDistance[posY-1][posX-1] > minDistance) {
 					blackMinDistance[posY-1][posX-1] = minDistance;
 					blackQueue.add(new int[]{posY-1, posX-1});
@@ -445,7 +445,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// left
-			if(isSpotValid(board, posY, posX-1)) {
+			if(AmazonsUtility.isSpotValid(board, posY, posX-1)) {
 				if(blackMinDistance[posY][posX-1] > minDistance) {
 					blackMinDistance[posY][posX-1] = minDistance;
 					blackQueue.add(new int[]{posY, posX-1});
@@ -453,7 +453,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// down left
-			if(isSpotValid(board, posY+1, posX-1)) {
+			if(AmazonsUtility.isSpotValid(board, posY+1, posX-1)) {
 				if(blackMinDistance[posY+1][posX-1] > minDistance) {
 					blackMinDistance[posY+1][posX-1] = minDistance;
 					blackQueue.add(new int[]{posY+1, posX-1});
@@ -461,7 +461,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// down
-			if(isSpotValid(board, posY+1, posX)) {
+			if(AmazonsUtility.isSpotValid(board, posY+1, posX)) {
 				if(blackMinDistance[posY+1][posX] > minDistance) {
 					blackMinDistance[posY+1][posX] = minDistance;
 					blackQueue.add(new int[]{posY+1, posX});
@@ -469,7 +469,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// down right
-			if(isSpotValid(board, posY+1, posX+1)) {
+			if(AmazonsUtility.isSpotValid(board, posY+1, posX+1)) {
 				if(blackMinDistance[posY+1][posX+1] > minDistance) {
 					blackMinDistance[posY+1][posX+1] = minDistance;
 					blackQueue.add(new int[]{posY+1, posX+1});
@@ -477,7 +477,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// right
-			if(isSpotValid(board, posY, posX+1)) {
+			if(AmazonsUtility.isSpotValid(board, posY, posX+1)) {
 				if(blackMinDistance[posY][posX+1] > minDistance) {
 					blackMinDistance[posY][posX+1] = minDistance;
 					blackQueue.add(new int[]{posY, posX+1});
@@ -485,7 +485,7 @@ public class HeuristicEvaluator {
 			}
 			
 			// up right
-			if(isSpotValid(board, posY-1, posX+1)) {
+			if(AmazonsUtility.isSpotValid(board, posY-1, posX+1)) {
 				if(blackMinDistance[posY-1][posX+1] > minDistance) {
 					blackMinDistance[posY-1][posX+1] = minDistance;
 					blackQueue.add(new int[]{posY-1, posX+1});
@@ -562,42 +562,42 @@ public class HeuristicEvaluator {
 			
 			for(int i = 1; i < 10; i++) {
 				// up
-				if(upValid && isSpotValid(board, posY-i, posX)) {
+				if(upValid && AmazonsUtility.isSpotValid(board, posY-i, posX)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY-i][posX];
 				} else upValid = false;
 				
 				// up left
-				if(upLeftValid && isSpotValid(board, posY-i, posX-i)) {
+				if(upLeftValid && AmazonsUtility.isSpotValid(board, posY-i, posX-i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY-i][posX-i];
 				} else upLeftValid = false;
 				
 				// left
-				if(leftValid && isSpotValid(board, posY, posX-i)) {
+				if(leftValid && AmazonsUtility.isSpotValid(board, posY, posX-i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY][posX-i];
 				} else leftValid = false;
 				
 				// down left
-				if(downLeftValid && isSpotValid(board, posY+i, posX-i)) {
+				if(downLeftValid && AmazonsUtility.isSpotValid(board, posY+i, posX-i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY+i][posX-i];
 				} else downLeftValid = false;
 				
 				// down
-				if(downValid && isSpotValid(board, posY+i, posX)) {
+				if(downValid && AmazonsUtility.isSpotValid(board, posY+i, posX)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY+i][posX];
 				} else downValid = false;
 				
 				// down right
-				if(downRightValid && isSpotValid(board, posY+i, posX+i)) {
+				if(downRightValid && AmazonsUtility.isSpotValid(board, posY+i, posX+i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY+i][posX+i];
 				} else downRightValid = false;
 				
 				// right
-				if(rightValid && isSpotValid(board, posY, posX+i)) {
+				if(rightValid && AmazonsUtility.isSpotValid(board, posY, posX+i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY][posX+i];
 				} else rightValid = false;
 				
 				// up right
-				if(upRightValid && isSpotValid(board, posY-i, posX+i)) {
+				if(upRightValid && AmazonsUtility.isSpotValid(board, posY-i, posX+i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY-i][posX+i];
 				} else upRightValid = false;
 				
@@ -623,42 +623,42 @@ public class HeuristicEvaluator {
 			
 			for(int i = 1; i < 10; i++) {
 				// up
-				if(upValid && isSpotValid(board, posY-i, posX)) {
+				if(upValid && AmazonsUtility.isSpotValid(board, posY-i, posX)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY-i][posX];
 				} else upValid = false;
 				
 				// up left
-				if(upLeftValid && isSpotValid(board, posY-i, posX-i)) {
+				if(upLeftValid && AmazonsUtility.isSpotValid(board, posY-i, posX-i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY-i][posX-i];
 				} else upLeftValid = false;
 				
 				// left
-				if(leftValid && isSpotValid(board, posY, posX-i)) {
+				if(leftValid && AmazonsUtility.isSpotValid(board, posY, posX-i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY][posX-i];
 				} else leftValid = false;
 				
 				// down left
-				if(downLeftValid && isSpotValid(board, posY+i, posX-i)) {
+				if(downLeftValid && AmazonsUtility.isSpotValid(board, posY+i, posX-i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY+i][posX-i];
 				} else downLeftValid = false;
 				
 				// down
-				if(downValid && isSpotValid(board, posY+i, posX)) {
+				if(downValid && AmazonsUtility.isSpotValid(board, posY+i, posX)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY+i][posX];
 				} else downValid = false;
 				
 				// down right
-				if(downRightValid && isSpotValid(board, posY+i, posX+i)) {
+				if(downRightValid && AmazonsUtility.isSpotValid(board, posY+i, posX+i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY+i][posX+i];
 				} else downRightValid = false;
 				
 				// right
-				if(rightValid && isSpotValid(board, posY, posX+i)) {
+				if(rightValid && AmazonsUtility.isSpotValid(board, posY, posX+i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY][posX+i];
 				} else rightValid = false;
 				
 				// up right
-				if(upRightValid && isSpotValid(board, posY-i, posX+i)) {
+				if(upRightValid && AmazonsUtility.isSpotValid(board, posY-i, posX+i)) {
 					queenEval += Math.pow(2, -(i-1)) * mobilityMap[posY-i][posX+i];
 				} else upRightValid = false;
 				
@@ -668,75 +668,5 @@ public class HeuristicEvaluator {
 		
 		return blackScore - whiteScore;
 	}
-	
-	private static boolean isSpotValid(int board[][], int y, int x) {
-		return x >= 0 && x <= 9 && y >= 0 && y <= 9 && board[y][x] == 0;
-	}
-	
-	private static void printBoard(int[][] board) {
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
-				if(board[i][j] == Integer.MAX_VALUE) {
-					System.out.print(9);
-				} else {
-					System.out.print(board[i][j]);
-				}
-				System.out.print(' ');
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-	
-	private static int[][] getMobilityMap(int[][] board) {
-		int[][] mobilityMap = new int[10][10];
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
-				mobilityMap[i][j] = 0;
-				
-				// up
-				if(isSpotValid(board, i-1, j)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// up left
-				if(isSpotValid(board, i-1, j-1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// left
-				if(isSpotValid(board, i, j-1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// down left
-				if(isSpotValid(board, i+1, j-1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// down
-				if(isSpotValid(board, i+1, j)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// down right
-				if(isSpotValid(board, i+1, j+1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// right
-				if(isSpotValid(board, i, j+1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// up right
-				if(isSpotValid(board, i-1, j+1)) {
-					mobilityMap[i][j]++;
-				}
-			}
-		}
-		return mobilityMap;
-	}
-	
 	
 }

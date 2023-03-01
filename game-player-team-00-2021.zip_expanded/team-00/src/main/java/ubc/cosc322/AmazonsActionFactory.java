@@ -33,15 +33,15 @@ public class AmazonsActionFactory {
 //			{0,0,3,1,3,3,1,3,0,0},
 //		};
 //		
-//		int[][] mobilityMap = getMobilityMap(defaultBoard);
-//		printBoard(mobilityMap);
+//		int[][] mobilityMap = AmazonsUtility.getMobilityMap(defaultBoard);
+//		AmazonsUtility.printBoard(mobilityMap);
 //		
 //		ArrayList<AmazonsAction> actions = getActions(defaultBoard, 1);
 //		int[][][] newState = AmazonsAction.applyAction(actions.get(0), defaultBoard, mobilityMap);
-//		printBoard(newState[1]);
+//		AmazonsUtility.printBoard(newState[1]);
 //		
-//		printBoard(defaultBoard);
-//		printBoard(newState[0]);
+//		AmazonsUtility.printBoard(defaultBoard);
+//		AmazonsUtility.printBoard(newState[0]);
 //
 //	}
 	
@@ -75,43 +75,43 @@ public class AmazonsActionFactory {
 			
 			for(int i = 1; i < 10; i++) {
 				// up
-				if(upValid && isSpotValid(board, queenSrcY-i, queenSrcX)) {
+				if(upValid && AmazonsUtility.isSpotValid(board, queenSrcY-i, queenSrcX)) {
 					//System.out.println(queenSrcY-i + ", " + queenSrcX);
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX, queenSrcY-i, board));
 				} else upValid = false;
 
 				// up left
-				if(upLeftValid && isSpotValid(board, queenSrcY-i, queenSrcX-i)) {
+				if(upLeftValid && AmazonsUtility.isSpotValid(board, queenSrcY-i, queenSrcX-i)) {
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX-i, queenSrcY-i, board));
 				} else upLeftValid = false;
 				
 				// left
-				if(leftValid && isSpotValid(board, queenSrcY, queenSrcX-i)) {
+				if(leftValid && AmazonsUtility.isSpotValid(board, queenSrcY, queenSrcX-i)) {
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX-i, queenSrcY, board));
 				} else leftValid = false;
 				
 				// down left
-				if(downLeftValid && isSpotValid(board, queenSrcY+i, queenSrcX-i)) {
+				if(downLeftValid && AmazonsUtility.isSpotValid(board, queenSrcY+i, queenSrcX-i)) {
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX-i, queenSrcY+i, board));
 				} else downLeftValid = false;
 				
 				// down
-				if(downValid && isSpotValid(board, queenSrcY+i, queenSrcX)) {
+				if(downValid && AmazonsUtility.isSpotValid(board, queenSrcY+i, queenSrcX)) {
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX, queenSrcY+i, board));
 				} else downValid = false;
 				
 				// down right
-				if(downRightValid && isSpotValid(board, queenSrcY+i, queenSrcX+i)) {
+				if(downRightValid && AmazonsUtility.isSpotValid(board, queenSrcY+i, queenSrcX+i)) {
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX+i, queenSrcY+i, board));
 				} else downRightValid = false;
 				
 				// right
-				if(rightValid && isSpotValid(board, queenSrcY, queenSrcX+i)) {
+				if(rightValid && AmazonsUtility.isSpotValid(board, queenSrcY, queenSrcX+i)) {
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX+i, queenSrcY, board));
 				} else rightValid = false;
 				
 				// up right
-				if(upRightValid && isSpotValid(board, queenSrcY-i, queenSrcX+i)) {
+				if(upRightValid && AmazonsUtility.isSpotValid(board, queenSrcY-i, queenSrcX+i)) {
 					actions.addAll(getArrowMoves(queenSrcX, queenSrcY, queenSrcX+i, queenSrcY-i, board));
 				} else upRightValid = false;
 			}
@@ -137,115 +137,46 @@ public class AmazonsActionFactory {
 		
 		for(int i = 1; i < 10; i++) {
 			// up
-			if(upValid && isSpotValid(newBoard, queenDestY-i, queenDestX)) {
+			if(upValid && AmazonsUtility.isSpotValid(newBoard, queenDestY-i, queenDestX)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX, queenDestY-i, board));
 			} else upValid = false;
 
 			// up left
-			if(upLeftValid && isSpotValid(newBoard, queenDestY-i, queenDestX-i)) {
+			if(upLeftValid && AmazonsUtility.isSpotValid(newBoard, queenDestY-i, queenDestX-i)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX-i, queenDestY-i, board));
 			} else upLeftValid = false;
 			
 			// left
-			if(leftValid && isSpotValid(newBoard, queenDestY, queenDestX-i)) {
+			if(leftValid && AmazonsUtility.isSpotValid(newBoard, queenDestY, queenDestX-i)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX-i, queenDestY, board));
 			} else leftValid = false;
 			
 			// down left
-			if(downLeftValid && isSpotValid(newBoard, queenDestY+i, queenDestX-i)) {
+			if(downLeftValid && AmazonsUtility.isSpotValid(newBoard, queenDestY+i, queenDestX-i)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX-i, queenDestY+i, board));
 			} else downLeftValid = false;
 			
 			// down
-			if(downValid && isSpotValid(newBoard, queenDestY+i, queenDestX)) {
+			if(downValid && AmazonsUtility.isSpotValid(newBoard, queenDestY+i, queenDestX)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX, queenDestY+i, board));
 			} else downValid = false;
 			
 			// down right
-			if(downRightValid && isSpotValid(newBoard, queenDestY+i, queenDestX+i)) {
+			if(downRightValid && AmazonsUtility.isSpotValid(newBoard, queenDestY+i, queenDestX+i)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX+i, queenDestY+i, board));
 			} else downRightValid = false;
 			
 			// right
-			if(rightValid && isSpotValid(newBoard, queenDestY, queenDestX+i)) {
+			if(rightValid && AmazonsUtility.isSpotValid(newBoard, queenDestY, queenDestX+i)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX+i, queenDestY, board));
 			} else rightValid = false;
 			
 			// up right
-			if(upRightValid && isSpotValid(newBoard, queenDestY-i, queenDestX+i)) {
+			if(upRightValid && AmazonsUtility.isSpotValid(newBoard, queenDestY-i, queenDestX+i)) {
 				actions.add(new AmazonsAction(queenSrcX, queenSrcY, queenDestX, queenDestY, queenDestX+i, queenDestY-i, board));
 			} else upRightValid = false;
 		}
 		
 		return actions;
-	}
-	
-	private static boolean isSpotValid(int board[][], int y, int x) {
-		return x >= 0 && x <= 9 && y >= 0 && y <= 9 && board[y][x] == 0;
-	}
-	
-	private static void printBoard(int[][] board) {
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
-				if(board[i][j] == Integer.MAX_VALUE) {
-					System.out.print(9);
-				} else {
-					System.out.print(board[i][j]);
-				}
-				System.out.print(' ');
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-	
-	private static int[][] getMobilityMap(int[][] board) {
-		int[][] mobilityMap = new int[10][10];
-		for(int i = 0; i < 10; i++) {
-			for(int j = 0; j < 10; j++) {
-				mobilityMap[i][j] = 0;
-				
-				// up
-				if(isSpotValid(board, i-1, j)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// up left
-				if(isSpotValid(board, i-1, j-1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// left
-				if(isSpotValid(board, i, j-1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// down left
-				if(isSpotValid(board, i+1, j-1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// down
-				if(isSpotValid(board, i+1, j)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// down right
-				if(isSpotValid(board, i+1, j+1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// right
-				if(isSpotValid(board, i, j+1)) {
-					mobilityMap[i][j]++;
-				}
-				
-				// up right
-				if(isSpotValid(board, i-1, j+1)) {
-					mobilityMap[i][j]++;
-				}
-			}
-		}
-		return mobilityMap;
 	}
 }
