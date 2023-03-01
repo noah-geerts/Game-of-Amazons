@@ -4,7 +4,6 @@ package ubc.cosc322;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import sfs2x.client.entities.Room;
 import ygraph.ai.smartfox.games.BaseGameGUI;
@@ -94,13 +93,11 @@ public class COSC322Test extends GamePlayer{
     	case GameMessage.GAME_STATE_BOARD:
     		ArrayList<Integer> stateArr = (ArrayList<Integer>)(msgDetails.get(AmazonsGameMessage.GAME_STATE));
     		this.getGameGUI().setGameState(stateArr);
-    		System.out.println("TESINGHAIFHIAUWHFIUAWHIFHAWIHFIWAHIFUA");
     		break; /*  THIS GAME STATE BOARD IS A MESSAGE CONTAINING THE CURRENT STATE*/
     	case GameMessage.GAME_ACTION_MOVE:
     		///CHECK IF MOVE IS LEGAL HERE!!!!!!!!!!
     		//if it is legal, update our local board and the gui, then let the AI run
     		//if it is ilegal, report the illegal move!
-    		System.out.println("TESING HAIFHIAUWHFIUAWHIFHAWIHFIWAHIFUA");
     		this.getGameGUI().updateGameState(msgDetails);
     	case GameMessage.GAME_ACTION_START:
     		String playingWhiteQueens = (String)msgDetails.get(AmazonsGameMessage.PLAYER_WHITE);
@@ -138,6 +135,6 @@ public class COSC322Test extends GamePlayer{
 	public void connect() {
     	gameClient = new GameClient(userName, passwd, this);			
 	}
-	
+
  
 }//end of class
