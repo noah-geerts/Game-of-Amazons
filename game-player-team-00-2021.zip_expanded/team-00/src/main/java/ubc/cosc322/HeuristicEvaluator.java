@@ -63,7 +63,7 @@ public class HeuristicEvaluator {
 	}
 	
 	private static double f1(double w) {
-		return (100.0 - w) / 50.0;
+		return (100.0 - w) / 100.0;
 	}
 	
 	private static double f2(double w) {
