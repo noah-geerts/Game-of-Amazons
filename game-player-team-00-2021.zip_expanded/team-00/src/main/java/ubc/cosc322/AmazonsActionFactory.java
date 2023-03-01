@@ -33,11 +33,16 @@ public class AmazonsActionFactory {
 //			{0,0,3,1,3,3,1,3,0,0},
 //		};
 //		
-//		final long startTime = System.nanoTime();
-//		ArrayList<AmazonsAction> actions = getActions(board, 1);
-//		final long endTime = System.nanoTime();
-//		System.out.println(actions.size());
-//		System.out.println("Total execution time: " + (endTime - startTime)/1000000.0);
+//		int[][] mobilityMap = getMobilityMap(defaultBoard);
+//		printBoard(mobilityMap);
+//		
+//		ArrayList<AmazonsAction> actions = getActions(defaultBoard, 1);
+//		int[][][] newState = AmazonsAction.applyAction(actions.get(0), defaultBoard, mobilityMap);
+//		printBoard(newState[1]);
+//		
+//		printBoard(defaultBoard);
+//		printBoard(newState[0]);
+//
 //	}
 	
 	// takes in a board state and a color (1 is white, 2 is black)
@@ -192,5 +197,55 @@ public class AmazonsActionFactory {
 			System.out.println();
 		}
 		System.out.println();
+	}
+	
+	private static int[][] getMobilityMap(int[][] board) {
+		int[][] mobilityMap = new int[10][10];
+		for(int i = 0; i < 10; i++) {
+			for(int j = 0; j < 10; j++) {
+				mobilityMap[i][j] = 0;
+				
+				// up
+				if(isSpotValid(board, i-1, j)) {
+					mobilityMap[i][j]++;
+				}
+				
+				// up left
+				if(isSpotValid(board, i-1, j-1)) {
+					mobilityMap[i][j]++;
+				}
+				
+				// left
+				if(isSpotValid(board, i, j-1)) {
+					mobilityMap[i][j]++;
+				}
+				
+				// down left
+				if(isSpotValid(board, i+1, j-1)) {
+					mobilityMap[i][j]++;
+				}
+				
+				// down
+				if(isSpotValid(board, i+1, j)) {
+					mobilityMap[i][j]++;
+				}
+				
+				// down right
+				if(isSpotValid(board, i+1, j+1)) {
+					mobilityMap[i][j]++;
+				}
+				
+				// right
+				if(isSpotValid(board, i, j+1)) {
+					mobilityMap[i][j]++;
+				}
+				
+				// up right
+				if(isSpotValid(board, i-1, j+1)) {
+					mobilityMap[i][j]++;
+				}
+			}
+		}
+		return mobilityMap;
 	}
 }
