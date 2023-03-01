@@ -3,11 +3,11 @@ package ubc.cosc322;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class HeuristicEvaluator {	
+public class HeuristicEvaluator {
 	private static int whiteQueen = 1;
     private static int blackQueen = 2;
     
-    private static double turnAdvantage = 0.1;
+    private static double turnAdvantage = 0.15;
     
 //    public static void main(String[] args) {
 //    	int[][] board = new int[][] {
@@ -35,7 +35,10 @@ public class HeuristicEvaluator {
 	// returns a double representing the advantage of one player
 	// positive values are white advantage
 	// negative values are black advantage
-	public static double getHeuristicEval(int board[][], int[][] mobilityMap, int playerTurn) {
+	public static double getHeuristicEval(int state[][][], int playerTurn) {
+		int[][] board = state[0];
+		int[][] mobilityMap = state[1];
+		
 		double[] queenMinDistance = queenMinDistance(board, playerTurn);
 		double t1 = queenMinDistance[0];
 		double t2 = 0.0;

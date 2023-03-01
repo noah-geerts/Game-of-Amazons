@@ -8,7 +8,7 @@ public class AmazonsAction {
 	private int arrowDestX;
 	private int arrowDestY;
 			
-	public AmazonsAction(int queenSrcX, int queenSrcY, int queenDestX, int queenDestY, int arrowDestX, int arrowDestY, int[][] board) {
+	public AmazonsAction(int queenSrcX, int queenSrcY, int queenDestX, int queenDestY, int arrowDestX, int arrowDestY) {
 		this.queenSrcX = queenSrcX;
 		this.queenSrcY = queenSrcY;
 		this.queenDestX = queenDestX;
@@ -19,7 +19,10 @@ public class AmazonsAction {
 	
 	// takes in an action and board
 	// returns a new board state and new mobility map
-	public static int[][][] applyAction(AmazonsAction action, int[][] board, int[][] mobilityMap) {
+	public static int[][][] applyAction(AmazonsAction action, int[][][] state) {
+		int[][] board = state[0];
+		int[][] mobilityMap = state[1];
+		
 		int[][] updatedBoard = new int[10][10];
 		int[][] updatedMobilityMap = new int[10][10];
 		
@@ -117,7 +120,8 @@ public class AmazonsAction {
 	
 	// takes in a queen move and board state (no arrow move needed)
 	// returns a new board state
-	public static int[][] applyQueenMove(int queenSrcX, int queenSrcY, int queenDestX, int queenDestY, int[][] board) {
+	public static int[][] applyQueenMove(int queenSrcX, int queenSrcY, int queenDestX, int queenDestY, int[][][] state) {
+		int[][] board = state[0];
 		int[][] updatedBoard = new int[10][10];
 		
 		for(int i = 0; i < 10; i++) {
