@@ -35,80 +35,80 @@ public class AmazonsAction {
 		updatedBoard[action.arrowDestY][action.arrowDestX] = 3;
 		
 		// update mobility where queen left
-		if(isSpotValid(action.queenSrcY-1, action.queenSrcX)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY-1, action.queenSrcX)) {
 			updatedMobilityMap[action.queenSrcY-1][action.queenSrcX]++;
 		}
-		if(isSpotValid(action.queenSrcY-1, action.queenSrcX-1)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY-1, action.queenSrcX-1)) {
 			updatedMobilityMap[action.queenSrcY-1][action.queenSrcX-1]++;
 		}
-		if(isSpotValid(action.queenSrcY-1, action.queenSrcX+1)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY-1, action.queenSrcX+1)) {
 			updatedMobilityMap[action.queenSrcY-1][action.queenSrcX+1]++;
 		}
-		if(isSpotValid(action.queenSrcY, action.queenSrcX-1)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY, action.queenSrcX-1)) {
 			updatedMobilityMap[action.queenSrcY][action.queenSrcX-1]++;
 		}
-		if(isSpotValid(action.queenSrcY, action.queenSrcX+1)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY, action.queenSrcX+1)) {
 			updatedMobilityMap[action.queenSrcY][action.queenSrcX+1]++;
 		}
-		if(isSpotValid(action.queenSrcY+1, action.queenSrcX)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY+1, action.queenSrcX)) {
 			updatedMobilityMap[action.queenSrcY+1][action.queenSrcX]++;
 		}
-		if(isSpotValid(action.queenSrcY+1, action.queenSrcX-1)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY+1, action.queenSrcX-1)) {
 			updatedMobilityMap[action.queenSrcY+1][action.queenSrcX-1]++;
 		}
-		if(isSpotValid(action.queenSrcY+1, action.queenSrcX+1)) {
+		if(AmazonsUtility.isSpotValid(action.queenSrcY+1, action.queenSrcX+1)) {
 			updatedMobilityMap[action.queenSrcY+1][action.queenSrcX+1]++;
 		}
 		
 		// update mobility where queen went
-		if(isSpotValid(action.queenDestY-1, action.queenDestX)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY-1, action.queenDestX)) {
 			updatedMobilityMap[action.queenDestY-1][action.queenDestX]--;
 		}
-		if(isSpotValid(action.queenDestY-1, action.queenDestX-1)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY-1, action.queenDestX-1)) {
 			updatedMobilityMap[action.queenDestY-1][action.queenDestX-1]--;
 		}
-		if(isSpotValid(action.queenDestY-1, action.queenDestX+1)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY-1, action.queenDestX+1)) {
 			updatedMobilityMap[action.queenDestY-1][action.queenDestX+1]--;
 		}
-		if(isSpotValid(action.queenDestY, action.queenDestX-1)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY, action.queenDestX-1)) {
 			updatedMobilityMap[action.queenDestY][action.queenDestX-1]--;
 		}
-		if(isSpotValid(action.queenDestY, action.queenDestX+1)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY, action.queenDestX+1)) {
 			updatedMobilityMap[action.queenDestY][action.queenDestX+1]--;
 		}
-		if(isSpotValid(action.queenDestY+1, action.queenDestX)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY+1, action.queenDestX)) {
 			updatedMobilityMap[action.queenDestY+1][action.queenDestX]--;
 		}
-		if(isSpotValid(action.queenDestY+1, action.queenDestX-1)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY+1, action.queenDestX-1)) {
 			updatedMobilityMap[action.queenDestY+1][action.queenDestX-1]--;
 		}
-		if(isSpotValid(action.queenDestY+1, action.queenDestX+1)) {
+		if(AmazonsUtility.isSpotValid(action.queenDestY+1, action.queenDestX+1)) {
 			updatedMobilityMap[action.queenDestY+1][action.queenDestX+1]--;
 		}
 		
 		// update mobility where arrow went
-		if(isSpotValid(action.arrowDestY-1, action.arrowDestX)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY-1, action.arrowDestX)) {
 			updatedMobilityMap[action.arrowDestY-1][action.arrowDestX]--;
 		}
-		if(isSpotValid(action.arrowDestY-1, action.arrowDestX-1)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY-1, action.arrowDestX-1)) {
 			updatedMobilityMap[action.arrowDestY-1][action.arrowDestX-1]--;
 		}
-		if(isSpotValid(action.arrowDestY-1, action.arrowDestX+1)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY-1, action.arrowDestX+1)) {
 			updatedMobilityMap[action.arrowDestY-1][action.arrowDestX+1]--;
 		}
-		if(isSpotValid(action.arrowDestY, action.arrowDestX-1)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY, action.arrowDestX-1)) {
 			updatedMobilityMap[action.arrowDestY][action.arrowDestX-1]--;
 		}
-		if(isSpotValid(action.arrowDestY, action.arrowDestX+1)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY, action.arrowDestX+1)) {
 			updatedMobilityMap[action.arrowDestY][action.arrowDestX+1]--;
 		}
-		if(isSpotValid(action.arrowDestY+1, action.arrowDestX)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY+1, action.arrowDestX)) {
 			updatedMobilityMap[action.arrowDestY+1][action.arrowDestX]--;
 		}
-		if(isSpotValid(action.arrowDestY+1, action.arrowDestX-1)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY+1, action.arrowDestX-1)) {
 			updatedMobilityMap[action.arrowDestY+1][action.arrowDestX-1]--;
 		}
-		if(isSpotValid(action.arrowDestY+1, action.arrowDestX+1)) {
+		if(AmazonsUtility.isSpotValid(action.arrowDestY+1, action.arrowDestX+1)) {
 			updatedMobilityMap[action.arrowDestY+1][action.arrowDestX+1]--;
 		}
 		
@@ -130,10 +130,6 @@ public class AmazonsAction {
 		updatedBoard[queenSrcY][queenSrcX] = 0;
 		
 		return updatedBoard;
-	}
-	
-	private static boolean isSpotValid(int y, int x) {
-		return x >= 0 && x <= 9 && y >= 0;
 	}
 	
 	public void printMove() {
