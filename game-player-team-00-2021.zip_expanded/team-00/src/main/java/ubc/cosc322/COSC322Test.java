@@ -127,9 +127,6 @@ public class COSC322Test extends GamePlayer {
 			int arrowPosRow = arrowPos.get(0);
 			int arrowPosColumn = arrowPos.get(1);
 			
-			int queenPosCurrValue = this.board[queenPosCurrRow-1][queenPosCurrColumn-1];
-			int queenPosNextValue = this.board[queenPosNextRow-1][queenPosNextColumn-1];
-			
 			//int arrowPosValue = this.board[arrowPosRow-1][arrowPosColumn-1]
 			
 			//check that the queen move is legal
@@ -146,19 +143,15 @@ public class COSC322Test extends GamePlayer {
 
 			System.out.println("Arrow move legal " + arrowLegal);
 			
-			legal = legal&&arrowLegal;
+			this.board[arrowPosRow - 1][arrowPosColumn - 1] = this.arrow;
 			
 			// if it is legal, update our local board and the gui, then let the AI run
-			// if it is ilegal, report the illegal move!
+			// if it is illegal, report the illegal move!
 			
-			if(legal) {
-				this.board[arrowPosRow -1][arrowPosColumn-1] = this.arrow;
+			if(legal&&arrowLegal) {
 				this.getGameGUI().updateGameState(msgDetails);
 			}else {
 				System.out.println("Illegal move!");
-				//revert the queen position if the move is not legal.
-				this.board[queenPosCurrRow-1][queenPosCurrColumn-1] = queenPosCurrValue;
-				this.board[queenPosNextRow-1][queenPosNextColumn-1] = queenPosNextValue;				
 				assert(false);
 			} 
 			
