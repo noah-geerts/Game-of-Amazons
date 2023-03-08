@@ -5,41 +5,48 @@ import java.util.ArrayList;
 public class MonteCarlo {	
 	long allowedTimeMs;
 	TreeNode root;
-	int explorationCoefficient;
+	double explorationCoefficient;
 	
-	public static void main(String[] args) {
-		int[][] defaultBoard = new int[][] {
-			{0,0,0,2,0,0,2,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{2,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{1,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,1,0,0,1,0,0,0},
-		};
-		int[][] mobilityMap = AmazonsUtility.getMobilityMap(defaultBoard);
-		int[][][] state = new int[][][] {defaultBoard, mobilityMap};
-		int currentPlayer = 1;
-		
-		TreeNode currentState = new TreeNode(state, currentPlayer);
-		
-		while(!currentState.isTerminal()) {
-			currentState.printBoard();
-			MonteCarlo mc = new MonteCarlo(currentState, 30000, 1);
-			AmazonsAction action = mc.MCTS();
-			state = AmazonsAction.applyAction(action, state);
-			if(currentPlayer == 1) currentPlayer = 2;
-			else currentPlayer = 1;
-			currentState = new TreeNode(state, currentPlayer);
-		}
-		AmazonsUtility.printBoard(state[0]);
-		System.out.println("Player " + currentPlayer + " loses!");
-	}
+//	public static void main(String[] args) {
+//		int[][] defaultBoard = new int[][] {
+//			{0,0,0,2,0,0,2,0,0,0},
+//			{0,0,0,0,0,0,0,0,0,0},
+//			{0,0,0,0,0,0,0,0,0,0},
+//			{2,0,0,0,0,0,0,0,0,2},
+//			{0,0,0,0,0,0,0,0,0,0},
+//			{0,0,0,0,0,0,0,0,0,0},
+//			{1,0,0,0,0,0,0,0,0,1},
+//			{0,0,0,0,0,0,0,0,0,0},
+//			{0,0,0,0,0,0,0,0,0,0},
+//			{0,0,0,1,0,0,1,0,0,0},
+//		};
+//		int[][] mobilityMap = AmazonsUtility.getMobilityMap(defaultBoard);
+//		int[][][] state = new int[][][] {defaultBoard, mobilityMap};
+//		int currentPlayer = 1;
+//		
+//		TreeNode currentState = new TreeNode(state, currentPlayer);
+//		MonteCarlo mc = null;
+//		while(!currentState.isTerminal()) {
+//			
+//			System.out.println("Current heuristic value: " + HeuristicEvaluator.getHeuristicEval(currentState.boardState, currentState.getColor()));
+//			//System.out.println("Current heuristic value 2: " + HeuristicEvaluator.getHeuristicEval2(currentState.boardState, currentState.getColor()));
+//			//double w = HeuristicEvaluator.queenMinDistance(currentState.boardState[0], currentState.getColor())[2];
+//			//System.out.println("Current w value: " + w);
+//			System.out.println(currentState.getColor() + " to move");
+//			currentState.printBoard();
+//			TreeNode.maxDepth = 0;
+//			mc = new MonteCarlo(currentState, 30000, 1.4);
+//			AmazonsAction action = mc.MCTS();
+//			state = AmazonsAction.applyAction(action, state);
+//			if(currentPlayer == 1) currentPlayer = 2;
+//			else currentPlayer = 1;
+//			currentState = new TreeNode(state, currentPlayer);
+//		}
+//		AmazonsUtility.printBoard(state[0]);
+//		System.out.println("Player " + (3-currentPlayer) + " wins!");
+//	}
 	
-	MonteCarlo(TreeNode root, long allowedTimeMs, int explorationCoefficient){
+	MonteCarlo(TreeNode root, long allowedTimeMs, double explorationCoefficient){
 		this.root = root;
 		this.allowedTimeMs = allowedTimeMs;
 		this.explorationCoefficient = explorationCoefficient;
@@ -48,22 +55,20 @@ public class MonteCarlo {
 	// performs an MCTS from the current root and returns the best action
 	public AmazonsAction MCTS() {
 		long currentTime = System.currentTimeMillis();
-		int i = 0;
+		int iterations = 0;
 		for(long startTime = System.currentTimeMillis(); currentTime - startTime < allowedTimeMs; currentTime = System.currentTimeMillis()) {
 			TreeNode leaf = traverse(root);
-			if(!leaf.expanded && !leaf.isTerminal()) { // if the leaf was already expanded, it means we've traversed the whole game tree, and should not run more
-				leaf = leaf.expandAt(0);
-				double result = heuristicRollout(leaf);
-				//int result = rollout(leaf);
-				backpropogate(leaf, result);
+			double result;
+			if(leaf.isTerminal()) {
+				result = 1;
 			} else {
-				System.out.println("Forced win found.");
-				System.out.println("Prediction: " + leaf.color + " loses.");
-				break;
+				leaf = leaf.expandAtRandom();
+				result = heuristicRollout(leaf);
 			}
-			i++;
+			iterations++;
+			backpropogate(leaf, result);
 		}
-		System.out.println(i);
+		System.out.println(iterations + " iterations were run");
 
 		// returns an action based on child with highest winrate
 		AmazonsAction bestAction = null;
@@ -111,44 +116,27 @@ public class MonteCarlo {
 				else return 1;
 			}
 			
-			//choose a random child
-			int numChildren = currentNode.getNumPossibleActions();
-			int random = (int)(Math.random() * numChildren); //generate a random int between 0 and numChildren - 1
-			
 			//expand that child and continue looping
-			currentNode = currentNode.expandAt(random);
+			currentNode = currentNode.expandAtRandom();
 		}
 	}
 	
 	public double heuristicRollout(TreeNode node) {
 		double heuristicResult = HeuristicEvaluator.getHeuristicEval(node.boardState, node.getColor());
-		double result = 0.5;
-		if(node.getColor() == 1) {
-			if(heuristicResult < -1) {
-				result = 1;
-			} else if(heuristicResult > 1) {
-				result = 0;
-			}
-		} else {
-			if(heuristicResult < -1) {
-				result = 0;
-			} else if(heuristicResult > 1) {
-				result = 1;
-			}
-		}
+		double result = AmazonsUtility.sigmoid(heuristicResult);
 		
-		return result;
+		if(node.getColor() == 1) {
+			return 1 - result;
+		} else {
+			return result;
+		}
 	}
 	
 	public void backpropogate(TreeNode leaf, double result) {
-		if(leaf.equals(root)) {
-			return;
-		}
 		leaf.N++; leaf.Q += result;
-		double parentResult = 0.5;
-		if(result == 1) parentResult = 0;
-		else if(result == 0) parentResult = 1;
-		backpropogate(leaf.parent, parentResult);
+		if(leaf.parent != null) {
+			backpropogate(leaf.parent, 1 - result);
+		}
 	}
 	
 }

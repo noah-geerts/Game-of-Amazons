@@ -80,4 +80,8 @@ public class AmazonsUtility {
 	public static boolean isSpotValid(int board[][], int y, int x) {
 		return x >= 0 && x <= 9 && y >= 0 && y <= 9 && board[y][x] == 0;
 	}
+	
+	public static double sigmoid(double x) {
+		return 1 / (1 + Math.exp(-x/5));
+	}
 }

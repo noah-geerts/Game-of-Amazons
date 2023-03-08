@@ -3,6 +3,9 @@ package ubc.cosc322;
 import java.util.ArrayList;
 
 public class TreeNode {	
+		public static int maxDepth = 0;
+		int depth;
+	
 		int color;
 		double Q;
 		int N;
@@ -23,10 +26,11 @@ public class TreeNode {
 			this.boardState = boardState;
 			this.parent = null;
 			this.color = color;
-			this.N = 2;
+			this.N = 0;
 			this.Q = 0;
 			this.expanded = false;
 			this.actionsGenerated = false;
+			this.depth = 0;
 		}
 		
 		//this constructor will be used for creating child nodes
@@ -44,6 +48,11 @@ public class TreeNode {
 			this.actionsGenerated = false;
 			this.children = new ArrayList<>();
 			this.action = action;
+			this.depth = parent.depth + 1;
+			if(this.depth > maxDepth) {
+				maxDepth = this.depth;
+				System.out.println("Depth: " + maxDepth);
+			}
 		}
 		
 		//this constructor to be used to make copies of nodes for roll out purposes
@@ -56,9 +65,9 @@ public class TreeNode {
 			this.children = new ArrayList<>();
 		}
 		
-		public double getUCB(int eC) {
+		public double getUCB(double eC) {
 			//if this node hasn't been visited yet, N=0, and the second term of the UCB will be infinity, so we just return Double.MAX_VALUE to avoid errors
-			if(N==0) {return 10000.0;}
+			if(N==0) return 10000.0;
 			//otherwise return the UCB formula
 			return Q/N + eC*Math.sqrt(Math.log(parent.N)/N);
 		}
@@ -92,10 +101,11 @@ public class TreeNode {
 		}
 		
 		//expands a specific action for roll out traversal
-		public TreeNode expandAt(int index) {
+		public TreeNode expandAtRandom() {
 			if(!this.actionsGenerated) {
 				this.generateActions();
 			}
+			int index = (int)(Math.random() * this.getNumPossibleActions());
 			AmazonsAction action = this.possibleActions.get(index);
 			this.possibleActions.remove(index);
 			if(this.possibleActions.isEmpty()) {

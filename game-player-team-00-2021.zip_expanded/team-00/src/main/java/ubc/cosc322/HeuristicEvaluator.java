@@ -671,5 +671,4 @@ public class HeuristicEvaluator {
 		
 		return blackScore - whiteScore;
 	}
-	
 }
