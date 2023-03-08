@@ -42,7 +42,7 @@ public class COSC322Test extends GamePlayer {
 	 * @param args for name and passwd (current, any string would work)
 	 */
 	public static void main(String[] args) {
-		COSC322Test player = new COSC322Test("user01", "pass");
+		COSC322Test player = new COSC322Test("COSC322_GROUP_7", "pass");
 		//HumanPlayer player = new HumanPlayer();
 
 		if (player.getGameGUI() == null) {
@@ -67,8 +67,6 @@ public class COSC322Test extends GamePlayer {
 		this.userName = userName;
 		this.passwd = passwd;
 		
-		InitalizeBoard();
-
 		// To make a GUI-based player, create an instance of BaseGameGUI
 		// and implement the method getGameGUI() accordingly
 		this.gamegui = new BaseGameGUI(this);
@@ -97,7 +95,8 @@ public class COSC322Test extends GamePlayer {
 			ArrayList<Integer> stateArr = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.GAME_STATE));
 			this.getGameGUI().setGameState(stateArr);
 			
-			System.out.println("Board Start");
+			System.out.println("GAME_STATE_BOARD");
+			InitalizeBoard();
 			
 			break; /* THIS GAME STATE BOARD IS A MESSAGE CONTAINING THE CURRENT STATE */
 		case GameMessage.GAME_ACTION_MOVE:
@@ -106,7 +105,7 @@ public class COSC322Test extends GamePlayer {
 			ArrayList<Integer> queenPosNext = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.QUEEN_POS_NEXT));
 			ArrayList<Integer> arrowPos = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.ARROW_POS));
 						
-			this.SetBoardState(queenPosCurr, queenPosNext, arrowPos, this.opponentQueen);
+			this.SetBoardState(queenPosCurr, queenPosNext, arrowPos, this.opponentQueen);		
 			this.getGameGUI().updateGameState(msgDetails);
 			
 			MakeMove();
@@ -119,7 +118,6 @@ public class COSC322Test extends GamePlayer {
 			SetMyQueen(playingWhiteQueens, playingBlackQueens);
 			
 			if(this.myQueen == this.whiteQueen && movedFirst) {
-				System.out.println("queen " + this.myQueen + " moved first");
 				movedFirst = false;
 				MakeMove();
 			}
@@ -157,7 +155,7 @@ public class COSC322Test extends GamePlayer {
 		
 		int[][][] currentState = new int[][][] {this.board, AmazonsUtility.getMobilityMap(this.board)};
 		
-		MonteCarlo ai = new MonteCarlo(new TreeNode(currentState, this.myQueen), 5000, 1);
+		MonteCarlo ai = new MonteCarlo(new TreeNode(currentState, this.myQueen), 30000, 1);
 		AmazonsAction a = ai.MCTS();
 		
 		if(a!=null) {
