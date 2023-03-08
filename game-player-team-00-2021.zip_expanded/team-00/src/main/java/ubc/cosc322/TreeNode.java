@@ -2,15 +2,17 @@ package ubc.cosc322;
 
 import java.util.ArrayList;
 
-public class TreeNode {
-
+public class TreeNode {	
 		int color;
-		int Q;
+		double Q;
 		int N;
 		int[][][] boardState;
 		AmazonsAction action; 	//action taken to reach node (used to return best action after MCTS)
 		TreeNode parent;
 		ArrayList<TreeNode> children;
+		ArrayList<AmazonsAction> possibleActions;
+		boolean expanded;
+		boolean actionsGenerated;
 		
 		//this constructor will be used to create the root node of the Monte-Carlo tree search 
 		//2 will be passed in for int N, because we can't have an unvisited root node without 
@@ -23,6 +25,8 @@ public class TreeNode {
 			this.color = color;
 			this.N = 2;
 			this.Q = 0;
+			this.expanded = false;
+			this.actionsGenerated = false;
 		}
 		
 		//this constructor will be used for creating child nodes
@@ -36,8 +40,20 @@ public class TreeNode {
 			}
 			this.N = 0;
 			this.Q = 0;
+			this.expanded = false;
+			this.actionsGenerated = false;
 			this.children = new ArrayList<>();
 			this.action = action;
+		}
+		
+		//this constructor to be used to make copies of nodes for roll out purposes
+		TreeNode(TreeNode copyNode) {
+			this.boardState = copyNode.boardState;
+			this.possibleActions = copyNode.possibleActions;
+			this.color = copyNode.color;
+			this.expanded = false;
+			this.actionsGenerated = copyNode.actionsGenerated;
+			this.children = new ArrayList<>();
 		}
 		
 		public double getUCB(int eC) {
@@ -48,31 +64,77 @@ public class TreeNode {
 		}
 		
 		//generate a child node given a subState of the current node's state and the action taken to get there
-		public void generateChild(int[][][] subState, AmazonsAction a) {
-			TreeNode child = new TreeNode(subState, this, a);
-			children.add(child);
+		public TreeNode generateChild(AmazonsAction a) {
+			//int[][][] subState = AmazonsAction.applyAction(a, this.boardState);
+			//TreeNode child = new TreeNode(AmazonsAction.applyAction(a, this.boardState), this, a);
+			TreeNode child = new TreeNode(AmazonsAction.applyAction(a, this.boardState), this, a);
+			this.children.add(child);
+			return child;
+		}
+		
+		private void generateActions() {
+			this.possibleActions = AmazonsActionFactory.getActions(this.boardState, this.color);
+			this.actionsGenerated = true;
 		}
 		
 		//expands the current node
 		public void expand() {
-			ArrayList<AmazonsAction> actions = AmazonsActionFactory.getActions(boardState, color);
-			//create a list of all possible subStates from the current node's state
-			for(AmazonsAction a: actions) {
-				generateChild(AmazonsAction.applyAction(a, boardState), a);
+			if(!this.actionsGenerated) {
+				this.generateActions();
 			}
+			//create a list of all possible subStates from the current node's state
+			for(AmazonsAction a: this.possibleActions) {
+				this.children.add(new TreeNode(AmazonsAction.applyAction(a, this.boardState), this, a));
+				//generateChild(a);
+			}
+			this.possibleActions.clear();
+			this.expanded = true;
+		}
 		
+		//expands a specific action for roll out traversal
+		public TreeNode expandAt(int index) {
+			if(!this.actionsGenerated) {
+				this.generateActions();
+			}
+			AmazonsAction action = this.possibleActions.get(index);
+			this.possibleActions.remove(index);
+			if(this.possibleActions.isEmpty()) {
+				this.expanded = true;
+			}
+			return generateChild(action);
 		}
 		
 		//checks if a node is terminal
 		public boolean isTerminal() {
-			int opponentColor;
-			if(this.color == 1) {
-				opponentColor = 2;
-			} else {opponentColor = 1;}
-			//if both players have no legal moves, the node is terminal
-			if(AmazonsActionFactory.getActions(boardState, color).isEmpty() || AmazonsActionFactory.getActions(boardState, opponentColor).isEmpty()) {
-				return true;
+			if(!this.actionsGenerated) {
+				this.generateActions();
 			}
-			return false;
+			return this.possibleActions.isEmpty() && this.children.isEmpty();
+		}
+		
+		public boolean hasUnexpandedChildren() {
+			if(!this.actionsGenerated) {
+				this.generateActions();
+			}
+			return !this.possibleActions.isEmpty();
+		}
+		
+		public boolean hasExpandedChildren() {
+			return !this.children.isEmpty();
+		}
+		
+		public int getColor() {
+			return this.color;
+		}
+		
+		public int getNumPossibleActions() {
+			if(!this.actionsGenerated) {
+				this.generateActions();
+			}
+			return this.possibleActions.size();
+		}
+		
+		public void printBoard() {
+			AmazonsUtility.printBoard(this.boardState[0]);
 		}
 }

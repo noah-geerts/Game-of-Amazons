@@ -2,25 +2,68 @@ package ubc.cosc322;
 
 import java.util.ArrayList;
 
-public class MonteCarlo {
-
-	int nSimulations;
+public class MonteCarlo {	
+	long allowedTimeMs;
 	TreeNode root;
 	int explorationCoefficient;
 	
-	MonteCarlo(TreeNode root, int nSimulations, int explorationCoefficient){
+	public static void main(String[] args) {
+		int[][] defaultBoard = new int[][] {
+			{0,0,0,2,0,0,2,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0},
+			{2,0,0,0,0,0,0,0,0,2},
+			{0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0},
+			{1,0,0,0,0,0,0,0,0,1},
+			{0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,0,0,0,0,0,0,0},
+			{0,0,0,1,0,0,1,0,0,0},
+		};
+		int[][] mobilityMap = AmazonsUtility.getMobilityMap(defaultBoard);
+		int[][][] state = new int[][][] {defaultBoard, mobilityMap};
+		int currentPlayer = 1;
+		
+		TreeNode currentState = new TreeNode(state, currentPlayer);
+		
+		while(!currentState.isTerminal()) {
+			currentState.printBoard();
+			MonteCarlo mc = new MonteCarlo(currentState, 30000, 1);
+			AmazonsAction action = mc.MCTS();
+			state = AmazonsAction.applyAction(action, state);
+			if(currentPlayer == 1) currentPlayer = 2;
+			else currentPlayer = 1;
+			currentState = new TreeNode(state, currentPlayer);
+		}
+		AmazonsUtility.printBoard(state[0]);
+		System.out.println("Player " + currentPlayer + " loses!");
+	}
+	
+	MonteCarlo(TreeNode root, long allowedTimeMs, int explorationCoefficient){
 		this.root = root;
-		this.nSimulations = nSimulations;
+		this.allowedTimeMs = allowedTimeMs;
 		this.explorationCoefficient = explorationCoefficient;
 	}
 	
 	// performs an MCTS from the current root and returns the best action
 	public AmazonsAction MCTS() {
-		for (int i = 0; i < nSimulations; i++) {
+		long currentTime = System.currentTimeMillis();
+		int i = 0;
+		for(long startTime = System.currentTimeMillis(); currentTime - startTime < allowedTimeMs; currentTime = System.currentTimeMillis()) {
 			TreeNode leaf = traverse(root);
-			int result = rollout(leaf, root.color);
-			backpropogate(leaf, result);
+			if(!leaf.expanded && !leaf.isTerminal()) { // if the leaf was already expanded, it means we've traversed the whole game tree, and should not run more
+				leaf = leaf.expandAt(0);
+				double result = heuristicRollout(leaf);
+				//int result = rollout(leaf);
+				backpropogate(leaf, result);
+			} else {
+				System.out.println("Forced win found.");
+				System.out.println("Prediction: " + leaf.color + " loses.");
+				break;
+			}
+			i++;
 		}
+		System.out.println(i);
 
 		// returns an action based on child with highest winrate
 		AmazonsAction bestAction = null;
@@ -42,7 +85,7 @@ public class MonteCarlo {
 
 	public TreeNode traverse(TreeNode node) {
 		// if the node is not a leaf node, traverse to its best child
-		if (!node.children.isEmpty()) {
+		if (!node.hasUnexpandedChildren() && node.hasExpandedChildren()) {
 			// get the child with the highest UCB score
 			double maxUCB = -1; // all UCB values will be >=0
 			TreeNode bestChild = null;
@@ -53,76 +96,59 @@ public class MonteCarlo {
 					bestChild = n;
 				}
 			}
-
 			// traverse recursively
 			return traverse(bestChild);
 		}
-		// if the node is a leaf node, if it is unvisited, return it for rollout
-		if (node.N == 0) {
-			return node;
-		}
-		// if it has been visited, expand it and return one of its children for rollout
-		node.expand();
-		// after expanding, we need to check if no children were created (the node is
-		// terminal)
-		if (node.children.isEmpty()) {
-			return node;
-		}
-		return node.children.get(0);
-
+		return node;
 	}
 	
 	//playerColor is the color of the player we desire to win, so the root node's color will be passed in
-	public int rollout(TreeNode start, int playerColor) {
-		int color = start.color;
-		int[][][] state = start.boardState;
-		while(true) {
-			int terminality = isTerminal(state, playerColor);	//we check win conditions based on the DESIRED PLAYER's COLOR
-			//if terminality is not 10, we return it, because we either won or lost
-			if(terminality != 10) {return terminality;}
+	public int rollout(TreeNode start) {
+		TreeNode currentNode = new TreeNode(start); //copy start node
+		while(true) {	
+			if(currentNode.isTerminal()) { //if a node is terminal, the current color loses
+				if(currentNode.getColor() == start.getColor()) return 0;
+				else return 1;
+			}
 			
-			//generate substates and choose one at random
-			ArrayList<int[][][]> subStates = generateSubStates(color,state);
-			int random = (int)(Math.random() * subStates.size()); //generate a random int between 0 and subStates.size() - 1
+			//choose a random child
+			int numChildren = currentNode.getNumPossibleActions();
+			int random = (int)(Math.random() * numChildren); //generate a random int between 0 and numChildren - 1
 			
-			//continue looping with a substate chosen and the color swapped
-			state = subStates.get(random);
-			color = swapColor(color);
+			//expand that child and continue looping
+			currentNode = currentNode.expandAt(random);
 		}
 	}
 	
-	public void backpropogate(TreeNode leaf, int result) {
+	public double heuristicRollout(TreeNode node) {
+		double heuristicResult = HeuristicEvaluator.getHeuristicEval(node.boardState, node.getColor());
+		double result = 0.5;
+		if(node.getColor() == 1) {
+			if(heuristicResult < -1) {
+				result = 1;
+			} else if(heuristicResult > 1) {
+				result = 0;
+			}
+		} else {
+			if(heuristicResult < -1) {
+				result = 0;
+			} else if(heuristicResult > 1) {
+				result = 1;
+			}
+		}
+		
+		return result;
+	}
+	
+	public void backpropogate(TreeNode leaf, double result) {
 		if(leaf.equals(root)) {
 			return;
 		}
 		leaf.N++; leaf.Q += result;
-		backpropogate(leaf.parent, result);
-	}
-	
-	public int isTerminal(int[][][] state, int color) {
-		if(AmazonsActionFactory.getActions(state, color).isEmpty() && AmazonsActionFactory.getActions(state, swapColor(color)).isEmpty()) {
-			return 0;	//return 0 if terminal and a tie (both players can't move)
-		} else if (!AmazonsActionFactory.getActions(state, color).isEmpty() && AmazonsActionFactory.getActions(state, swapColor(color)).isEmpty()) {
-			return 1;	//return 1 if terminal and we won (only opponent can't move)
-		} else if (AmazonsActionFactory.getActions(state, color).isEmpty() && !AmazonsActionFactory.getActions(state, swapColor(color)).isEmpty()) {
-			return 0;	//return 0 if terminal and we lost (only we can't move)
-		} else {
-			return 10;	//return 10 if not a terminal state (this is arbitrary);
-		}
-	}
-	
-	public ArrayList<int[][][]> generateSubStates(int color, int[][][] state){
-		ArrayList<AmazonsAction> actions = AmazonsActionFactory.getActions(state, color);
-		ArrayList<int[][][]> subStates = new ArrayList<>();
-		for(AmazonsAction a: actions) {
-			subStates.add(AmazonsAction.applyAction(a, state));
-		}
-		return subStates;
-	}
-	
-	public int swapColor(int i) {
-		if(i==1) {return 2;}
-		return 1;
+		double parentResult = 0.5;
+		if(result == 1) parentResult = 0;
+		else if(result == 0) parentResult = 1;
+		backpropogate(leaf.parent, parentResult);
 	}
 	
 }
