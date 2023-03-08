@@ -42,7 +42,7 @@ public class COSC322Test extends GamePlayer {
 	 * @param args for name and passwd (current, any string would work)
 	 */
 	public static void main(String[] args) {
-		COSC322Test player = new COSC322Test("user06", "pass");
+		COSC322Test player = new COSC322Test("user01", "pass");
 		//HumanPlayer player = new HumanPlayer();
 
 		if (player.getGameGUI() == null) {
@@ -157,7 +157,7 @@ public class COSC322Test extends GamePlayer {
 		
 		int[][][] currentState = new int[][][] {this.board, AmazonsUtility.getMobilityMap(this.board)};
 		
-		MonteCarlo ai = new MonteCarlo(new TreeNode(currentState, this.myQueen), 10000, 1);
+		MonteCarlo ai = new MonteCarlo(new TreeNode(currentState, this.myQueen), 5000, 1);
 		AmazonsAction a = ai.MCTS();
 		
 		if(a!=null) {
@@ -191,18 +191,20 @@ public class COSC322Test extends GamePlayer {
 	public void InitalizeBoard() {
 		movedFirst = true;
 		
-		board = new int[][] {
-			{0,0,0,2,0,0,2,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{2,0,0,0,0,0,0,0,0,2},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{1,0,0,0,0,0,0,0,0,1},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,0,0,0,0,0,0,0},
-			{0,0,0,1,0,0,1,0,0,0},
-		};
+		this.board = new int[10][10];
+
+		// hard coded but ideally set using stateArr
+		this.board[0][3] = this.whiteQueen;
+		this.board[0][6] = this.whiteQueen;
+
+		this.board[3][0] = this.whiteQueen;
+		this.board[3][9] = this.whiteQueen;
+
+		this.board[6][0] = this.blackQueen;
+		this.board[6][9] = this.blackQueen;
+
+		this.board[9][3] = this.blackQueen;
+		this.board[9][6] = this.blackQueen;
 	}
 
 	@Override
