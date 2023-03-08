@@ -53,16 +53,22 @@ public class AmazonsUtility {
 	}
 	
 	public static void printBoard(int[][] board) {
+		System.out.println("-----------------------------------------");
 		for(int i = 0; i < 10; i++) {
 			for(int j = 0; j < 10; j++) {
-				if(board[i][j] == Integer.MAX_VALUE) {
-					System.out.print(9);
+				if(j == 0) {
+					System.out.print("| ");
+				}
+				if(board[i][j] == 0) {
+					System.out.print(' ');
+				} else if(board[i][j] == 3) {
+					System.out.print('X');
 				} else {
 					System.out.print(board[i][j]);
 				}
-				System.out.print(' ');
+				System.out.print(" | ");
 			}
-			System.out.println();
+			System.out.println("\n-----------------------------------------");
 		}
 		System.out.println();
 	}
