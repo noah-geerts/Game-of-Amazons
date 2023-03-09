@@ -27,7 +27,7 @@ public class COSC322Test extends GamePlayer {
 	private String userName = null;
 	private String passwd = null;
 
-	int[][] board;
+	int[][][] state;
 	private int whiteQueen = 1;
 	private int blackQueen = 2;
 	private int arrow = 3; // could be any number other than 1, 2
@@ -100,15 +100,13 @@ public class COSC322Test extends GamePlayer {
 			
 			break; /* THIS GAME STATE BOARD IS A MESSAGE CONTAINING THE CURRENT STATE */
 		case GameMessage.GAME_ACTION_MOVE:
-						
 			ArrayList<Integer> queenPosCurr = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.QUEEN_POS_CURR));
 			ArrayList<Integer> queenPosNext = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.QUEEN_POS_NEXT));
 			ArrayList<Integer> arrowPos = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.ARROW_POS));
-						
-			this.SetBoardState(queenPosCurr, queenPosNext, arrowPos, this.opponentQueen);		
-			this.getGameGUI().updateGameState(msgDetails);
 			
+			ApplyOpponentMove(queenPosCurr, queenPosNext, arrowPos);
 			MakeMove();
+			break;
 
 		case GameMessage.GAME_ACTION_START:
 			
@@ -121,6 +119,7 @@ public class COSC322Test extends GamePlayer {
 				movedFirst = false;
 				MakeMove();
 			}
+			break;
 			
 		default:
 			assert (false);
@@ -128,81 +127,74 @@ public class COSC322Test extends GamePlayer {
 		}
 		return true;
 	}
-	// WRITE A METHOD THAT SETS MYQUEEN TO 1 IF THIS.USERNAME = PLAYINGWHITEQUEENS,
-	// and THE OPPOSITE IF THIS.USERNAME = PLAYINGBLACKQUEENS
 	
 	public void SetMyQueen(String playingWhiteQueens, String playingBlackQueens) {
     	if(this.userName().equals(playingWhiteQueens)) {
     		 this.myQueen = this.whiteQueen;
     		 this.opponentQueen = this.blackQueen;
-    	}else if (this.userName().equals(playingBlackQueens) ) {
-    		  this.myQueen = this.blackQueen;
-    		  this.opponentQueen = this.whiteQueen;
+    	} else if(this.userName().equals(playingBlackQueens)) {
+    		 this.myQueen = this.blackQueen;
+    		 this.opponentQueen = this.whiteQueen;
+    	} else {
+    		System.out.println("Fatal error, invalid queen value received " + this.myQueen + ", please restart");
+    		assert(false);
     	}
     	
     	System.out.println("SetMyQueen " + this.myQueen);
 	}
-
-	/// WRITE A METHOD INITIALIZE GAME BOARD THAT TAKES THE ARRAYLIST FROM THE
-	/// SERVER (121 indexes) AND CONVERTS IT TO THE BOARD[][] ARRAY
-
-	// WRITE A METHOD THAT DISPLAYS THE CURRENT STATE OF THE BOARD AS TEXT, FOR
-	// TESTING PURPOSES, ALSO WRITE THESE MOVES TO A TEXT
-	// FILE SO THAT YOU HAVE PROOF THAT THE OPPONENT MADE AN ILLEGAL MOVE AFTER THE
-	// GAME
 	
 	public void MakeMove() {
 		
-		int[][][] currentState = new int[][][] {this.board, AmazonsUtility.getMobilityMap(this.board)};
+		MonteCarlo ai = new MonteCarlo(new TreeNode(this.state, this.myQueen), 5000, 1.4);
+		AmazonsAction action = ai.MCTS();
 		
-		MonteCarlo ai = new MonteCarlo(new TreeNode(currentState, this.myQueen), 30000, 1);
-		AmazonsAction a = ai.MCTS();
-		
-		if(a!=null) {
-		
-		ArrayList<Integer> aiQueenPosCurr = new ArrayList<Integer>();
-		aiQueenPosCurr.add(a.queenSrcY + 1);
-		aiQueenPosCurr.add(a.queenSrcX + 1);
-		
-		ArrayList<Integer> aiQueenPosNext = new ArrayList<Integer>();
-		aiQueenPosNext.add(a.queenDestY + 1);
-		aiQueenPosNext.add(a.queenDestX + 1);
-		
-		ArrayList<Integer> aiArrowPos = new ArrayList<Integer>();
-		aiArrowPos.add(a.arrowDestY + 1);
-		aiArrowPos.add(a.arrowDestX + 1);
-		
-		this.SetBoardState(aiQueenPosCurr, aiQueenPosNext, aiArrowPos, this.myQueen);
-		
-		this.getGameGUI().updateGameState(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
-		this.getGameClient().sendMoveMessage(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
+		if(action != null) {
+			ArrayList<Integer> aiQueenPosCurr = new ArrayList<Integer>();
+			aiQueenPosCurr.add(action.queenSrcY + 1);
+			aiQueenPosCurr.add(action.queenSrcX + 1);
+			
+			ArrayList<Integer> aiQueenPosNext = new ArrayList<Integer>();
+			aiQueenPosNext.add(action.queenDestY + 1);
+			aiQueenPosNext.add(action.queenDestX + 1);
+			
+			ArrayList<Integer> aiArrowPos = new ArrayList<Integer>();
+			aiArrowPos.add(action.arrowDestY + 1);
+			aiArrowPos.add(action.arrowDestX + 1);
+			
+			this.getGameGUI().updateGameState(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
+			this.getGameClient().sendMoveMessage(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
+			this.state = AmazonsAction.applyAction(action, this.state);
+		} else {
+			System.out.println("You lose");
+			// TODO: is there a server message you send once the game is over?
 		}
 	}
 	
-	public void SetBoardState(ArrayList<Integer> queenPosCurrent, ArrayList<Integer> queenPosNew, ArrayList<Integer> arrowPos, int queen) {
-		// update the board state.
-		this.board[queenPosCurrent.get(0) - 1][queenPosCurrent.get(1) - 1] = 0;
-		this.board[queenPosNew.get(0) - 1][queenPosNew.get(1) - 1] = queen;
-		this.board[arrowPos.get(0) - 1][arrowPos.get(1) - 1] = this.arrow;
+	public void ApplyOpponentMove(ArrayList<Integer> queenPosCurr, ArrayList<Integer> queenPosNext, ArrayList<Integer> arrowPos) {
+		AmazonsAction action = new AmazonsAction(queenPosCurr.get(1)-1, queenPosCurr.get(0)-1, queenPosNext.get(1)-1, queenPosNext.get(0)-1, arrowPos.get(1)-1, arrowPos.get(0)-1);
+		this.state = AmazonsAction.applyAction(action, this.state);
+		this.getGameGUI().updateGameState(queenPosCurr, queenPosNext, arrowPos);
 	}
 	
 	public void InitalizeBoard() {
 		movedFirst = true;
 		
-		this.board = new int[10][10];
+		this.state = new int[2][10][10];
 
 		// hard coded but ideally set using stateArr
-		this.board[0][3] = this.whiteQueen;
-		this.board[0][6] = this.whiteQueen;
+		this.state[0][0][3] = this.whiteQueen;
+		this.state[0][0][6] = this.whiteQueen;
 
-		this.board[3][0] = this.whiteQueen;
-		this.board[3][9] = this.whiteQueen;
+		this.state[0][3][0] = this.whiteQueen;
+		this.state[0][3][9] = this.whiteQueen;
 
-		this.board[6][0] = this.blackQueen;
-		this.board[6][9] = this.blackQueen;
+		this.state[0][6][0] = this.blackQueen;
+		this.state[0][6][9] = this.blackQueen;
 
-		this.board[9][3] = this.blackQueen;
-		this.board[9][6] = this.blackQueen;
+		this.state[0][9][3] = this.blackQueen;
+		this.state[0][9][6] = this.blackQueen;
+		
+		this.state[1] = AmazonsUtility.getMobilityMap(this.state[0]);
 	}
 
 	@Override
