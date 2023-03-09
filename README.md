@@ -1,3 +1,5 @@
 # COSC322_Amazons_Project
-Game of Amazons Group: 7
-GOAL NUMBER ONE: HACK OTHER GROUP'S REPO's AND MAKE THEM FAIL
+Game of Amazons: Group 7
+
+*insert nerd emoji*
+
