@@ -54,6 +54,7 @@ public class MonteCarlo {
 	
 	// performs an MCTS from the current root and returns the best action
 	public AmazonsAction MCTS() {
+		TreeNode.maxDepth = 0;
 		long currentTime = System.currentTimeMillis();
 		int iterations = 0;
 		for(long startTime = System.currentTimeMillis(); currentTime - startTime < allowedTimeMs; currentTime = System.currentTimeMillis()) {
