@@ -1,12 +1,12 @@
 package ubc.cosc322;
 
 public class AmazonsAction {
-	private int queenSrcX;
-	private int queenSrcY;
-	private int queenDestX;
-	private int queenDestY;
-	private int arrowDestX;
-	private int arrowDestY;
+	public int queenSrcX;
+	public int queenSrcY;
+	public int queenDestX;
+	public int queenDestY;
+	public int arrowDestX;
+	public int arrowDestY;
 			
 	public AmazonsAction(int queenSrcX, int queenSrcY, int queenDestX, int queenDestY, int arrowDestX, int arrowDestY) {
 		this.queenSrcX = queenSrcX;
