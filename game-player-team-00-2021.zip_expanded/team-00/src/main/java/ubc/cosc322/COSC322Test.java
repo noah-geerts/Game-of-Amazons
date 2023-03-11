@@ -28,6 +28,7 @@ public class COSC322Test extends GamePlayer {
 	private String passwd = null;
 
 	int[][][] state;
+	MonteCarlo mc;
 	private int whiteQueen = 1;
 	private int blackQueen = 2;
 	private int arrow = 3; // could be any number other than 1, 2
@@ -144,10 +145,10 @@ public class COSC322Test extends GamePlayer {
 	}
 	
 	public void MakeMove() {
+		// assert that monte carlo is tracking turns properly as we can only make moves on our turn
+		assert(this.mc.root.getColor() == this.myQueen);
 		
-		MonteCarlo ai = new MonteCarlo(new TreeNode(this.state, this.myQueen), 5000, 1.4);
-		AmazonsAction action = ai.MCTS();
-		
+		AmazonsAction action = this.mc.MCTS();
 		if(action != null) {
 			ArrayList<Integer> aiQueenPosCurr = new ArrayList<Integer>();
 			aiQueenPosCurr.add(action.queenSrcY + 1);
@@ -164,7 +165,8 @@ public class COSC322Test extends GamePlayer {
 			this.getGameGUI().updateGameState(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
 			this.getGameClient().sendMoveMessage(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
 			this.state = AmazonsAction.applyAction(action, this.state);
-		} else {
+			this.mc.rootFromAction(action);
+		} else { // action is only null when you lose, as you have no actions available
 			System.out.println("You lose");
 			// TODO: is there a server message you send once the game is over?
 		}
@@ -174,6 +176,7 @@ public class COSC322Test extends GamePlayer {
 		AmazonsAction action = new AmazonsAction(queenPosCurr.get(1)-1, queenPosCurr.get(0)-1, queenPosNext.get(1)-1, queenPosNext.get(0)-1, arrowPos.get(1)-1, arrowPos.get(0)-1);
 		this.state = AmazonsAction.applyAction(action, this.state);
 		this.getGameGUI().updateGameState(queenPosCurr, queenPosNext, arrowPos);
+		this.mc.rootFromAction(action);
 	}
 	
 	public void InitalizeBoard() {
@@ -195,6 +198,8 @@ public class COSC322Test extends GamePlayer {
 		this.state[0][9][6] = this.blackQueen;
 		
 		this.state[1] = AmazonsUtility.getMobilityMap(this.state[0]);
+		
+		this.mc = new MonteCarlo(new TreeNode(this.state, this.whiteQueen), 29000, 1.4);
 	}
 
 	@Override
