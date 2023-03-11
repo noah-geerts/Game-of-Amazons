@@ -141,9 +141,10 @@ public class MonteCarlo {
 	}
 	
 	public void rootFromAction(AmazonsAction a) {
+		this.root.expand();
 		boolean found = false;
 		for(TreeNode n: root.children) {
-			if(n.action.equals(a)) {
+			if(n.action.isEqual(a)) {
 				root = n;
 				root.parent = null;
 				found = true;

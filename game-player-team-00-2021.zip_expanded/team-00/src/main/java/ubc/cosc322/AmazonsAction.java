@@ -136,6 +136,15 @@ public class AmazonsAction {
 		return updatedBoard;
 	}
 	
+	public boolean isEqual(AmazonsAction action) {
+		return (this.queenSrcX == action.queenSrcX
+				&& this.queenSrcY == action.queenSrcY
+				&& this.queenDestX == action.queenDestX
+				&& this.queenDestY == action.queenDestY
+				&& this.arrowDestX == action.arrowDestX
+				&& this.arrowDestY == action.arrowDestY);
+	}
+	
 	public void printMove() {
 		System.out.println(this.queenSrcX + ", " + this.queenSrcY + ", " + this.queenDestX + ", " + this.queenDestY + ", " + this.arrowDestX + ", " + this.arrowDestY);
 	}
