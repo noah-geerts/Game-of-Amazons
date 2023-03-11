@@ -140,4 +140,28 @@ public class MonteCarlo {
 		}
 	}
 	
+	public void rootFromAction(AmazonsAction a) {
+		boolean found = false;
+		for(TreeNode n: root.children) {
+			if(n.action.equals(a)) {
+				root = n;
+				root.parent = null;
+				found = true;
+				break;
+			}
+		}
+		if(!found) {
+			//RECORD THE ILLEGAL MOVE STUFF
+			int newColor;
+			if(root.color == 2) {
+				newColor = 1;
+			} else {
+				newColor = 2;
+			}
+			int[][][] postCheatState = AmazonsAction.applyAction(a, root.boardState);
+			root = new TreeNode(postCheatState, newColor);
+		}
+
+	}
+	
 }
