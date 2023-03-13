@@ -33,8 +33,6 @@ public class COSC322Test extends GamePlayer {
 	private int arrow = 3; // could be any number other than 1, 2
 	private int myQueen = -1;
 	private int opponentQueen = -1;
-	
-	private boolean movedFirst = true;
 
 	/**
 	 * The main method
@@ -100,7 +98,7 @@ public class COSC322Test extends GamePlayer {
 			this.getGameGUI().setGameState(stateArr);
 			
 			System.out.println("GAME_STATE_BOARD");
-			InitalizeBoard();
+			
 			
 			break; /* THIS GAME STATE BOARD IS A MESSAGE CONTAINING THE CURRENT STATE */
 		case GameMessage.GAME_ACTION_MOVE:
@@ -113,14 +111,13 @@ public class COSC322Test extends GamePlayer {
 			break;
 
 		case GameMessage.GAME_ACTION_START:
-			
 			String playingWhiteQueens = (String) msgDetails.get(AmazonsGameMessage.PLAYER_WHITE);
 			String playingBlackQueens = (String) msgDetails.get(AmazonsGameMessage.PLAYER_BLACK);
-			assert (!playingWhiteQueens.equals(playingBlackQueens));	
 			SetMyQueen(playingWhiteQueens, playingBlackQueens);
 			
-			if(this.myQueen == this.whiteQueen && movedFirst) {
-				movedFirst = false;
+			InitalizeBoard();
+			
+			if(this.myQueen == this.whiteQueen) {
 				MakeMove();
 			}
 			break;
@@ -133,6 +130,7 @@ public class COSC322Test extends GamePlayer {
 	}
 	
 	public void SetMyQueen(String playingWhiteQueens, String playingBlackQueens) {
+		assert (!playingWhiteQueens.equals(playingBlackQueens));
     	if(this.userName().equals(playingWhiteQueens)) {
     		 this.myQueen = this.whiteQueen;
     		 this.opponentQueen = this.blackQueen;
@@ -181,7 +179,6 @@ public class COSC322Test extends GamePlayer {
 	}
 	
 	public void InitalizeBoard() {
-		movedFirst = true;
 		System.out.println("INITIALIZING BOARD. PANIC IF THIS ISN'T GAME START!!");
 		
 		int[][][] state = new int[2][10][10];
