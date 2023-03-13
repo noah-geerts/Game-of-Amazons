@@ -96,6 +96,7 @@ public class COSC322Test extends GamePlayer {
 		case GameMessage.GAME_STATE_BOARD:					
 			ArrayList<Integer> stateArr = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.GAME_STATE));
 			this.getGameGUI().setGameState(stateArr);
+			this.mc = null;
 			
 			System.out.println("GAME_STATE_BOARD");
 			
