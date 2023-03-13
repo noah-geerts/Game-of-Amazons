@@ -107,7 +107,9 @@ public class COSC322Test extends GamePlayer {
 			ArrayList<Integer> arrowPos = (ArrayList<Integer>) (msgDetails.get(AmazonsGameMessage.ARROW_POS));
 			
 			ApplyOpponentMove(queenPosCurr, queenPosNext, arrowPos);
-			MakeMove();
+			if(this.mc != null) {
+				MakeMove();
+			}
 			break;
 
 		case GameMessage.GAME_ACTION_START:
@@ -175,7 +177,9 @@ public class COSC322Test extends GamePlayer {
 	public void ApplyOpponentMove(ArrayList<Integer> queenPosCurr, ArrayList<Integer> queenPosNext, ArrayList<Integer> arrowPos) {
 		AmazonsAction action = new AmazonsAction(queenPosCurr.get(1)-1, queenPosCurr.get(0)-1, queenPosNext.get(1)-1, queenPosNext.get(0)-1, arrowPos.get(1)-1, arrowPos.get(0)-1);
 		this.getGameGUI().updateGameState(queenPosCurr, queenPosNext, arrowPos);
-		this.mc.rootFromAction(action);
+		if(this.mc != null) {
+			this.mc.rootFromAction(action);
+		}
 	}
 	
 	public void InitalizeBoard() {
