@@ -27,7 +27,6 @@ public class COSC322Test extends GamePlayer {
 	private String userName = null;
 	private String passwd = null;
 
-	int[][][] state;
 	MonteCarlo mc;
 	private int whiteQueen = 1;
 	private int blackQueen = 2;
@@ -43,7 +42,11 @@ public class COSC322Test extends GamePlayer {
 	 * @param args for name and passwd (current, any string would work)
 	 */
 	public static void main(String[] args) {
-		COSC322Test player = new COSC322Test("COSC322_GROUP_7", "pass");
+		String uname = "COSC322_GROUP_7";
+		if(args.length > 0) {
+			uname = args[0];
+		}
+		COSC322Test player = new COSC322Test(uname, "pass");
 		//HumanPlayer player = new HumanPlayer();
 
 		if (player.getGameGUI() == null) {
@@ -164,7 +167,6 @@ public class COSC322Test extends GamePlayer {
 			
 			this.getGameGUI().updateGameState(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
 			this.getGameClient().sendMoveMessage(aiQueenPosCurr, aiQueenPosNext, aiArrowPos);
-			this.state = AmazonsAction.applyAction(action, this.state);
 			this.mc.rootFromAction(action);
 		} else { // action is only null when you lose, as you have no actions available
 			System.out.println("You lose");
@@ -174,32 +176,32 @@ public class COSC322Test extends GamePlayer {
 	
 	public void ApplyOpponentMove(ArrayList<Integer> queenPosCurr, ArrayList<Integer> queenPosNext, ArrayList<Integer> arrowPos) {
 		AmazonsAction action = new AmazonsAction(queenPosCurr.get(1)-1, queenPosCurr.get(0)-1, queenPosNext.get(1)-1, queenPosNext.get(0)-1, arrowPos.get(1)-1, arrowPos.get(0)-1);
-		this.state = AmazonsAction.applyAction(action, this.state);
 		this.getGameGUI().updateGameState(queenPosCurr, queenPosNext, arrowPos);
 		this.mc.rootFromAction(action);
 	}
 	
 	public void InitalizeBoard() {
 		movedFirst = true;
+		System.out.println("INITIALIZING BOARD. PANIC IF THIS ISN'T GAME START!!");
 		
-		this.state = new int[2][10][10];
+		int[][][] state = new int[2][10][10];
 
 		// hard coded but ideally set using stateArr
-		this.state[0][0][3] = this.whiteQueen;
-		this.state[0][0][6] = this.whiteQueen;
+		state[0][0][3] = this.whiteQueen;
+		state[0][0][6] = this.whiteQueen;
 
-		this.state[0][3][0] = this.whiteQueen;
-		this.state[0][3][9] = this.whiteQueen;
+		state[0][3][0] = this.whiteQueen;
+		state[0][3][9] = this.whiteQueen;
 
-		this.state[0][6][0] = this.blackQueen;
-		this.state[0][6][9] = this.blackQueen;
+		state[0][6][0] = this.blackQueen;
+		state[0][6][9] = this.blackQueen;
 
-		this.state[0][9][3] = this.blackQueen;
-		this.state[0][9][6] = this.blackQueen;
+		state[0][9][3] = this.blackQueen;
+		state[0][9][6] = this.blackQueen;
 		
-		this.state[1] = AmazonsUtility.getMobilityMap(this.state[0]);
+		state[1] = AmazonsUtility.getMobilityMap(state[0]);
 		
-		this.mc = new MonteCarlo(new TreeNode(this.state, this.whiteQueen), 29000, 1.4);
+		this.mc = new MonteCarlo(new TreeNode(state, this.whiteQueen), 29000, 1.4);
 	}
 
 	@Override
