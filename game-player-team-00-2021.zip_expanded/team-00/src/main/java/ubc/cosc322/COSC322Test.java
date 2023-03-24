@@ -120,7 +120,7 @@ public class COSC322Test extends GamePlayer {
 			
 			InitalizeBoard();
 			
-			if(this.myQueen == this.whiteQueen) {
+			if(this.myQueen == this.blackQueen) {
 				MakeMove();
 			}
 			break;
@@ -203,7 +203,7 @@ public class COSC322Test extends GamePlayer {
 		
 		state[1] = AmazonsUtility.getMobilityMap(state[0]);
 		
-		this.mc = new MonteCarlo(new TreeNode(state, this.whiteQueen), 29000, 1.4);
+		this.mc = new MonteCarlo(new TreeNode(state, this.blackQueen), 29000, 1.4);
 	}
 
 	@Override
