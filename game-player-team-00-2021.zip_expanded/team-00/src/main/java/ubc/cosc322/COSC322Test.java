@@ -184,7 +184,7 @@ public class COSC322Test extends GamePlayer {
 	}
 	
 	public void InitalizeBoard() {
-		System.out.println("INITIALIZING BOARD. PANIC IF THIS ISN'T GAME START!!");
+		System.out.println("Initializing board");
 		
 		int[][][] state = new int[2][10][10];
 
