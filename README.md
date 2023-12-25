@@ -1,5 +1,2 @@
 # COSC322_Amazons_Project
-Game of Amazons: Group 7
-
-*insert nerd emoji*
-
+Rational agent that plays Game of Amazons using Monte Carlo search and various heuristic functions.
